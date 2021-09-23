@@ -67,9 +67,14 @@ class Router
         return false;
     }
 
+
+    /**
+     * перенаправляет url по корректному маршруту
+     * @param string $url входящий url
+     */
     public static function dispatch($url) {
         if (self::matchRoute($url)) {
-            $controller = self::$currentRoute['controller'];
+            $controller = self::upperCamelCase(self::$currentRoute['controller']);
             if(class_exists($controller)) {
                 echo 'OK';
             } else {
@@ -79,5 +84,14 @@ class Router
             http_response_code(404); //Код ошибки выводит в консоль
             include '404.html';
         }
+    }
+
+
+    /**
+     * Принимает название контролера из url (controller-name) и приводит его к виду (ControllerName)
+     * @param $name
+     */
+    protected static function upperCamelCase($name) {
+        return str_replace(' ', '', ucwords(str_replace('-', ' ', $name)));
     }
 }
