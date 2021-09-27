@@ -76,7 +76,13 @@ class Router
         if (self::matchRoute($url)) {
             $controller = self::upperCamelCase(self::$currentRoute['controller']);
             if(class_exists($controller)) {
-                echo 'OK';
+                $controllerObj = new $controller;
+                $action = self::lowerCamelCase(self::$currentRoute['action']) . 'Action';
+                if (method_exists($controllerObj, $action)) {
+                    $controllerObj->$action();
+                } else {
+                    echo "Метод <b>$controller::$action()</b> не найден";
+                }
             } else {
                 echo "Контроллер <b>$controller</b> не найден";
             }
@@ -89,9 +95,17 @@ class Router
 
     /**
      * Принимает название контролера из url (controller-name) и приводит его к виду (ControllerName)
-     * @param $name
+     * @param string $name
      */
     protected static function upperCamelCase($name) {
         return str_replace(' ', '', ucwords(str_replace('-', ' ', $name)));
+    }
+
+    /**
+     * Принимает название action (action-name) и приводит его к виду (actionName)
+     * @param string $name
+     */
+    protected static function lowerCamelCase($name) {
+        return lcfirst(str_replace(' ', '', ucwords(str_replace('-', ' ', $name))));
     }
 }
