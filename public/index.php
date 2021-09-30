@@ -1,5 +1,7 @@
 <?php
 
+use vendor\core\Router;
+
 $query = rtrim($_SERVER['QUERY_STRING'], '/');
 
 const WWW = __DIR__;
@@ -8,11 +10,10 @@ define("ROOT", dirname(__DIR__));
 define("APP", dirname(__DIR__) . '/app');
 
 require '../vendor/libs/functions.php';
-require '../vendor/core/Router.php';
 
 //автозагрузка классов
 spl_autoload_register(function ($className) {
-    $file = APP . '/controllers/' . $className . '.php';
+    $file = ROOT . '/' . str_replace('\\', '/', $className) . '.php';
     if (is_file($file)) {
         require_once $file;
     }

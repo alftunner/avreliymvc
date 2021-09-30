@@ -1,5 +1,7 @@
 <?php
 
+namespace vendor\core;
+
 /**
  * класс для построения маршрутов
  */
@@ -74,7 +76,7 @@ class Router
      */
     public static function dispatch($url) {
         if (self::matchRoute($url)) {
-            $controller = self::upperCamelCase(self::$currentRoute['controller']);
+            $controller = 'app\\controllers\\' . self::upperCamelCase(self::$currentRoute['controller']);
             if(class_exists($controller)) {
                 $controllerObj = new $controller;
                 $action = self::lowerCamelCase(self::$currentRoute['action']) . 'Action';
