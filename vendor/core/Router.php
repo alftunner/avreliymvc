@@ -61,6 +61,7 @@ class Router
                 if(!isset($route['action'])) {
                     $route['action'] = 'index';
                 }
+                $route['controller'] = self::upperCamelCase($route['controller']);
                 self::$currentRoute = $route;
                 showMeArr(self::$currentRoute);
                 return true;
@@ -75,10 +76,11 @@ class Router
      * @param string $url входящий url
      */
     public static function dispatch($url) {
+        $url = self::removeQueryString($url);
         if (self::matchRoute($url)) {
-            $controller = 'app\\controllers\\' . self::upperCamelCase(self::$currentRoute['controller']);
+            $controller = 'app\\controllers\\' . self::$currentRoute['controller'];
             if(class_exists($controller)) {
-                $controllerObj = new $controller;
+                $controllerObj = new $controller(self::$currentRoute);
                 $action = self::lowerCamelCase(self::$currentRoute['action']) . 'Action';
                 if (method_exists($controllerObj, $action)) {
                     $controllerObj->$action();
@@ -109,5 +111,20 @@ class Router
      */
     protected static function lowerCamelCase($name) {
         return lcfirst(str_replace(' ', '', ucwords(str_replace('-', ' ', $name))));
+    }
+
+    /**
+     * метод для отсечения от url явных Get параметров
+     * @param $url
+     */
+    protected static function removeQueryString($url) {
+        if ($url) {
+            $params = explode('&', $url, 2);
+            if (strpos($params[0], '=') === false) {
+                return rtrim($params[0], '/');
+            } else {
+                return '';
+            }
+        }
     }
 }
