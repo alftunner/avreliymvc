@@ -2,18 +2,20 @@
 
 namespace app\controllers;
 
-class PostsNew
+use vendor\core\base\Controller;
+
+class PostsNew extends App
 {
     public function __construct() {
-        echo 'PostsNew::__construct';
+
     }
     public function testAction() {
-        echo 'PostsNew::test';
+
     }
     public function testPageAction() {
-        echo 'PostsNew::testPage';
+
     }
     public function before() {
-        echo 'PostsNew::before';
+
     }
 }

@@ -63,7 +63,6 @@ class Router
                 }
                 $route['controller'] = self::upperCamelCase($route['controller']);
                 self::$currentRoute = $route;
-                showMeArr(self::$currentRoute);
                 return true;
             }
         }
@@ -84,6 +83,7 @@ class Router
                 $action = self::lowerCamelCase(self::$currentRoute['action']) . 'Action';
                 if (method_exists($controllerObj, $action)) {
                     $controllerObj->$action();
+                    $controllerObj->getView();
                 } else {
                     echo "Метод <b>$controller::$action()</b> не найден";
                 }
