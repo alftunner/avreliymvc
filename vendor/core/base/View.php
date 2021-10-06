@@ -26,11 +26,22 @@ class View
 
     public function __construct($currentRoute, $layout = '', $view = '') {
         $this->currentRoute = $currentRoute;
-        $this->layout = $layout ?: LAYOUT;
+        if ($layout === false) {
+            $this->layout = false;
+        } else {
+            $this->layout = $layout ?: LAYOUT;
+        }
         $this->view = $view;
     }
 
-    public function render() {
+    /**
+     * Метод для подключения шаблона и вида (вызывается в базовом контролле)
+     * @param $data - данные которые тянутся из контролле для отображения на странице
+     */
+    public function render($data) {
+        if (is_array($data)) {
+            extract($data); //функция создаёт переменные на основании ключей массива
+        }
         $file_view = APP . "/views/{$this->currentRoute['controller']}/{$this->view}.php";
         ob_start();
         if (is_file($file_view)) {
@@ -40,11 +51,13 @@ class View
         }
         $content = ob_get_clean();
 
-        $file_layout = APP . "/views/layouts/{$this->layout}.php";
-        if (is_file($file_layout)) {
-            require $file_layout;
-        } else {
-            echo "<p>Не найден шаблон <b>{$file_layout}</b></p>";
+        if (false !== $this->layout) {
+            $file_layout = APP . "/views/layouts/{$this->layout}.php";
+            if (is_file($file_layout)) {
+                require $file_layout;
+            } else {
+                echo "<p>Не найден шаблон <b>{$file_layout}</b></p>";
+            }
         }
     }
 }

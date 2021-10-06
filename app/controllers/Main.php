@@ -6,8 +6,8 @@ use vendor\core\base\Controller;
 
 class Main extends App
 {
-    public $layout = 'main';
     public function indexAction() {
-        $this->view = 'test';
+        $name = 'alftunner';
+        $this->setData(['name' => 'alftunner', 'test' => 'data']);
     }
 }

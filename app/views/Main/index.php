@@ -1,2 +1,3 @@
-<?php
-echo '<h3>TEST</h3>';
+<code><?=__FILE__?></code>
+<p><?=$name?></p>
+<p><?=$test?></p>

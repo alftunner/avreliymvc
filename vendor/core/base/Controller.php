@@ -24,13 +24,29 @@ abstract class Controller
      */
     public $layout;
 
+    /**
+     * текущий шаблон
+     * @var array
+     */
+    public $data = [];
+
     public function __construct($currentRoute) {
         $this->currentRoute = $currentRoute;
         $this->view = $currentRoute['action'];
     }
 
+    /**
+     *Метод для подключения вида и шаблона (вызывается в dispatch() Router)
+     */
     public function getView() {
         $vObj = new View($this->currentRoute, $this->layout, $this->view);
-        $vObj->render();
+        $vObj->render($this->data);
+    }
+
+    /**
+     *Метод для передачи пользовательских данных в View (передача данных в render() произойдёт при вызове getView() в dispatch() Router)
+     */
+    public function setData($data) {
+        $this->data = $data;
     }
 }
