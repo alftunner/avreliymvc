@@ -4,11 +4,8 @@ namespace app\controllers;
 
 use vendor\core\base\Controller;
 
-class PostsNew extends App
+class PostsNewController extends AppController
 {
-    public function __construct() {
-
-    }
     public function testAction() {
 
     }

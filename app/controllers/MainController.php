@@ -4,7 +4,7 @@ namespace app\controllers;
 
 use vendor\core\base\Controller;
 
-class Main extends App
+class MainController extends AppController
 {
     public function indexAction() {
         $name = 'alftunner';

@@ -77,7 +77,7 @@ class Router
     public static function dispatch($url) {
         $url = self::removeQueryString($url);
         if (self::matchRoute($url)) {
-            $controller = 'app\\controllers\\' . self::$currentRoute['controller'];
+            $controller = 'app\\controllers\\' . self::$currentRoute['controller'].'Controller';
             if(class_exists($controller)) {
                 $controllerObj = new $controller(self::$currentRoute);
                 $action = self::lowerCamelCase(self::$currentRoute['action']) . 'Action';
