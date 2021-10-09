@@ -16,11 +16,25 @@ class DB
     /**
      * @var self свойство для хранения объекта класса DB
      */
-    protected $instance;
+    protected static $instance;
+
+    /**
+     * @var int счётчик запросов к базе
+     */
+    public static $counterQueries = 0;
+
+    /**
+     * @var array массив для хранения запросов
+     */
+    public static $queries = [];
 
     protected function __construct() {
         $db = require ROOT . '/config/config_db.php';
-        $this->pdo = new \PDO($db['dsn'], $db['user'], $db['pass']);
+        $options = [
+            \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+        ];
+        $this->pdo = new \PDO($db['dsn'], $db['user'], $db['pass'], $options);
     }
 
 
@@ -41,6 +55,8 @@ class DB
      * @return bool
      */
     public function execute($sql) {
+        self::$counterQueries++;
+        self::$queries[] = $sql;
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute();
     }
@@ -52,6 +68,8 @@ class DB
      * @return array|false
      */
     public function query($sql) {
+        self::$counterQueries++;
+        self::$queries[] = $sql;
         $stmt = $this->pdo->prepare($sql);
         $res = $stmt->execute();
         if ($res !== false) {
