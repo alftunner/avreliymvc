@@ -9,7 +9,7 @@ class MainController extends AppController
 {
     public function indexAction() {
         $model = new Main();
-        $res = $model->findAll();
+        $res = $model->findLike('помощью', 'post');
         $this->setData(['data' => $res]);
     }
 }
