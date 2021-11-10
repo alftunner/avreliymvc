@@ -1,10 +1,15 @@
 <div class="container">
-    <?
-    foreach ($data as $item) {
-        echo "<h3>{$item['header']}</h3>";
-        echo "<h4>{$item['short']}</h4>";
-        echo "<p>{$item['post']}</p><br><br>";
-    }
-    ?>
+    <h1><?=$title?></h1>
+    <nav class="nav">
+        <? foreach ($menu as $item) { ?>
+            <a class="nav-link active" aria-current="page" href="#"><?=$item['title']?></a>
+        <? } ?>
+    </nav>
+        <?
+        foreach ($posts as $post) { ?>
+            <h6><?=$post['header']?></h6>
+            <p><?=$post['post']?></p>
+            <br><br>
+        <? } ?>
 </div>
 

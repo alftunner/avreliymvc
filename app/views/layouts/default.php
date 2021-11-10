@@ -9,7 +9,7 @@
     <title>DEFAULT</title>
 </head>
 <body>
-<h1><?=$content?></h1>
+<?=$content?>
 
 <script src="/public/bootstrap/js/bootstrap.js"></script>
 </html>
