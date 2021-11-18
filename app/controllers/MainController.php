@@ -12,7 +12,8 @@ class MainController extends AppController
         $model = new Main();
         $posts = R::findAll('posts');
         $menu = $this->menu;
-        $title = 'PAGE TITLE';
-        $this->setData(compact('title', 'posts', 'menu'));
+        $this->setMeta('Проверочная страница', 'Это описание страницы', 'Это набор ключевых слов страницы');
+        $meta = $this->meta;
+        $this->setData(compact('meta', 'posts', 'menu'));
     }
 }

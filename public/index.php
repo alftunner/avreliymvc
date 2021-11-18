@@ -22,6 +22,7 @@ spl_autoload_register(function ($className) {
 });
 
 //Собственные правила маршрутизации
+Router::add('^page/test$', ['controller' => 'Page', 'action' => 'test']);
 Router::add('^page/(?P<action>[a-z-]+)/(?P<alias>[a-z-]+)$', ['controller' => 'Page']);
 Router::add('^page/(?P<alias>[a-z-]+)$', ['controller' => 'Page', 'action' => 'view']);
 
