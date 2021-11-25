@@ -13,6 +13,7 @@ class AppController extends Controller
 {
     public $menu;
     public $meta = [];
+
     public function __construct($currentRoute)
     {
         parent::__construct($currentRoute);
@@ -20,6 +21,12 @@ class AppController extends Controller
         $this->menu = R::findAll('category');
     }
 
+    /**
+     * Метод для установки метаданных для страницы
+     * @param string $title
+     * @param string $description
+     * @param string $keywords
+     */
     protected function setMeta($title = '', $description = '', $keywords = '') {
         $this->meta['title'] = $title;
         $this->meta['description'] = $description;

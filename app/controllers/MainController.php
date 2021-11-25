@@ -4,7 +4,9 @@ namespace app\controllers;
 
 use R;
 use app\models\Main;
+use vendor\core\App;
 use vendor\core\base\Controller;
+use vendor\core\Registry;
 
 class MainController extends AppController
 {
