@@ -12,7 +12,11 @@ class MainController extends AppController
 {
     public function indexAction() {
         $model = new Main();
-        $posts = R::findAll('posts');
+        $posts = App::$app->cache->get('posts');
+        if (!$posts) {
+            $posts = R::findAll('posts');
+            App::$app->cache->set('posts', $posts);
+        }
         $menu = $this->menu;
         $this->setMeta('Проверочная страница', 'Это описание страницы', 'Это набор ключевых слов страницы');
         $meta = $this->meta;
