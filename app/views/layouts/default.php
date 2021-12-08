@@ -4,9 +4,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="<?=$meta['description']?>">
-    <meta name="keywords" content="<?=$meta['keywords']?>">
-    <title><?=$meta['title']?></title>
+    <?=\vendor\core\base\View::getMeta();?>
     <!-- Bootstrap CSS -->
     <link href="/public/bootstrap/css/bootstrap.css" rel="stylesheet">
     <title>DEFAULT</title>

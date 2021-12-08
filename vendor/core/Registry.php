@@ -4,8 +4,8 @@ namespace vendor\core;
 
 class Registry
 {
+    use TSingleton;
     public static $objects = [];
-    protected static $instance;
 
     protected function __construct()
     {
@@ -25,13 +25,6 @@ class Registry
         if (!isset(self::$objects[$name])) {
             self::$objects[$name] = new $value;
         }
-    }
-
-    public static function instance() {
-        if (self::$instance === null) {
-            self::$instance = new self();
-        }
-        return self::$instance;
     }
 
     public function getList() {

@@ -30,6 +30,8 @@ class View
      */
     public $scripts = [];
 
+    public static $meta = ['title' => '', 'desc' => '', 'keywords' => ''];
+
     public function __construct($currentRoute, $layout = '', $view = '') {
         $this->currentRoute = $currentRoute;
         if ($layout === false) {
@@ -83,5 +85,17 @@ class View
             $content = preg_replace($pattern, '', $content);
         }
         return $content;
+    }
+
+    public static function getMeta() {
+        echo '<title>' . self::$meta['title'] . '</title>
+              <meta name="description" content="'. self::$meta['desc'] .'">
+              <meta name="keywords" content="'. self::$meta['keywords'] .'">';
+    }
+
+    public static function setMeta($title = '', $desc = '', $keywords = '') {
+        self::$meta['title'] = $title;
+        self::$meta['desc'] = $desc;
+        self::$meta['keywords'] = $keywords;
     }
 }

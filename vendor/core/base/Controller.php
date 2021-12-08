@@ -56,4 +56,14 @@ abstract class Controller
     public function isAjax() {
         return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
     }
+
+    /**
+     * Метод возвращает вид в качестве результата ajax - запроса
+     * @param $view
+     * @param array $vars
+     */
+    public function loadView($view, $vars = []) {
+        extract($vars);
+        require APP . "/views/{$this->currentRoute['controller']}/{$view}.php";
+    }
 }
