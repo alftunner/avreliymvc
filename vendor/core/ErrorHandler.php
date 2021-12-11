@@ -1,6 +1,6 @@
 <?php
 
-define('DEDUG', 1);
+namespace vendor\core;
 
 /**
  * Класс для обработки различных ошибок и исключений
@@ -8,7 +8,7 @@ define('DEDUG', 1);
 class ErrorHandler {
 
     public function __construct() {
-        if (DEDUG) {
+        if (DEBUG) {
             error_reporting(-1);
         } else {
             error_reporting(0);
@@ -28,8 +28,7 @@ class ErrorHandler {
      * @return bool
      */
     public function errorHandler($errno, $errstr, $errfile, $errline) {
-        error_log('[' . date("Y-m-d H:i:s") . '] Текст ошибки: ' . $errstr . ' | В файле - ' . $errfile
-            . ' | Строка ' . $errline . "\n" . '===================================' . "\n", 3, __DIR__ . '/errors.log');
+        $this->logErrors($errstr, $errfile, $errline);
         $this->displayError($errno, $errstr, $errfile, $errline);
         return true;
     }
@@ -40,8 +39,7 @@ class ErrorHandler {
     public function fatalErrorHandler() {
         $error = error_get_last();
         if (!empty($error) && $error['type'] & (E_ERROR | E_PARSE | E_COMPILE_ERROR | E_CORE_ERROR)) {
-            error_log('[' . date("Y-m-d H:i:s") . '] Текст ошибки: ' . $error['message'] . ' | В файле - ' . $error['file']
-                . ' | Строка ' . $error['line'] . "\n" . '===================================' . "\n", 3, __DIR__ . '/errors.log');
+            $this->logErrors($error['message'], $error['file'], $error['line']);
             ob_end_clean();
             $this->displayError($error['type'], $error['message'], $error['file'], $error['line']);
         } else {
@@ -53,12 +51,21 @@ class ErrorHandler {
      * Метод для обработки исключений
      * @param Exception $e
      */
-    public function exceptionHandler(Exception $e) {
-        error_log('[' . date("Y-m-d H:i:s") . '] Текст ошибки: ' . $e->getMessage() . ' | В файле - ' . $e->getFile()
-            . ' | Строка ' . $e->getLine() . "\n" . '===================================' . "\n", 3, __DIR__ . '/errors.log');
+    public function exceptionHandler($e) {
+        $this->logErrors($e->getMessage(), $e->getFile(), $e->getLine());
         $this->displayError('Исключение', $e->getMessage(), $e->getFile(), $e->getLine(), $e->getCode());
     }
 
+    /**
+     * Метод для записи ошибки в файл лог
+     * @param string $message
+     * @param string $file
+     * @param string $line
+     */
+    protected function logErrors($message = '', $file = '', $line = '') {
+        error_log('[' . date("Y-m-d H:i:s") . '] Текст ошибки: ' . $message . ' | В файле - ' . $file
+            . ' | Строка ' . $line . "\n" . '===================================' . "\n", 3, ROOT . '/tmp/errors.log');
+    }
 
     /**
      * Метод для подключения шаблона вывода ошибок
@@ -70,13 +77,14 @@ class ErrorHandler {
      */
     protected function displayError($errno, $errstr, $errfile, $errline, $response = 500) {
         http_response_code($response);
-        if (DEDUG) {
-            require 'views/dev.php';
+        if ($response == 404) {
+            require WWW . '/errors/404.html';
+            die();
+        }
+        if (DEBUG) {
+            require WWW . '/errors/dev.php';
         } else {
-            require 'views/prod.php';
+            require WWW . '/errors/prod.php';
         }
     }
 }
-
-new ErrorHandler();
-throw new Exception('Hello');
