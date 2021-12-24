@@ -1,6 +1,6 @@
-<h3><?=$meta['title']?></h3>
 <button class="btn btn-secondary" id="send">Кнопка</button>
 <?
+new \vendor\widgets\menu\Menu();
 foreach ($posts as $post) { ?>
 <figure class="text-right">
     <blockquote class="blockquote">
