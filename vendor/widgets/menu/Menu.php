@@ -2,6 +2,8 @@
 
 namespace vendor\widgets\menu;
 
+use vendor\libs\Cache;
+
 /**
  * Класс для потроения меню
  */
@@ -31,28 +33,69 @@ class Menu
      * родительский тег-обёртка для меню
      * @var
      */
-    protected $container;
+    protected $container = 'ul';
+
+    /**
+     * класс для $container
+     * @var string
+     */
+    protected $class = 'menu';
     /**
      * таблица из которой будем брать данные для построения меню
      * @var
      */
-    protected $table;
+    protected $table = 'categories';
     /**
      * отвечает за кеширование меню
      * @var
      */
-    protected $cache;
+    protected $cache = 3600;
+    /**
+     * ключ для кеша
+     * @var string
+     */
+    protected $cacheKey = 'avreliy_menu';
 
-    public function __construct() {
+    public function __construct($options = []) {
+        $this->template = __DIR__ . '/menu_templates/select.php';
+        $this->getOptions($options);
         $this->run();
+    }
+
+    /**
+     * Метод для установки значений свойств из параметров конструктора (передаётся массив)
+     * @param $options - массив с названиями свойств и их значениями
+     */
+    protected function getOptions($options) {
+        foreach ($options as $property => $value) {
+            if (property_exists($this, $property)) {
+                $this->$property = $value;
+            }
+        }
+    }
+
+    /**
+     * Метод для вывода меню
+     */
+    protected function menuOutput() {
+        echo "<{$this->container} class='{$this->class}'>";
+        echo $this->menuHtml;
+        echo "</{$this->container}>";
     }
 
     /**
      * Метод для вызова всех других методов класса
      */
     protected function run() {
-        $this->data = \R::getAssoc("SELECT * FROM categories"); //метод RedBean, который возращает данные в виде массива, где ключами служат ID записей теблицы
-        $this->tree = $this->getTree();
+        $cache = new Cache();
+        $this->menuHtml = $cache->get($this->cacheKey);
+        if (!$this->menuHtml) {
+            $this->data = \R::getAssoc("SELECT * FROM {$this->table}"); //метод RedBean, который возращает данные в виде массива, где ключами служат ID записей теблицы
+            $this->tree = $this->getTree();
+            $this->menuHtml = $this->getMenuHtml($this->tree);
+            $cache->set($this->cacheKey, $this->menuHtml, $this->cache);
+        }
+        $this->menuOutput();
     }
 
     /**
@@ -78,7 +121,11 @@ class Menu
      * @param string $tab
      */
     protected function getMenuHtml($tree, $tab = '') {
-
+        $str = '';
+        foreach ($tree as $id => $category) {
+            $str .= $this->categoryToTemplate($category, $tab, $id);
+        }
+        return $str;
     }
 
     /**
@@ -88,6 +135,8 @@ class Menu
      * @param $id - id категории
      */
     protected function categoryToTemplate($category, $tab, $id) {
-
+        ob_start();
+        require $this->template;
+        return ob_get_clean();
     }
 }

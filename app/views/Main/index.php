@@ -1,6 +1,13 @@
 <button class="btn btn-secondary" id="send">Кнопка</button>
 <?
-new \vendor\widgets\menu\Menu();
+new \vendor\widgets\menu\Menu([
+        //'template' => WWW . '/menu/my_menu.php',
+        'container' => 'select',
+        'class' => 'my_menu',
+        'table' => 'categories',
+        'cache' => 60,
+        'cacheKey' => 'menu_select',
+]);
 foreach ($posts as $post) { ?>
 <figure class="text-right">
     <blockquote class="blockquote">
