@@ -50,12 +50,12 @@ class View
         if (is_array($data)) {
             extract($data); //функция создаёт переменные на основании ключей массива
         }
-        $file_view = APP . "/views/{$this->currentRoute['controller']}/{$this->view}.php";
+        $file_view = APP . "/views/{$this->currentRoute['prefix']}{$this->currentRoute['controller']}/{$this->view}.php";
         ob_start();
         if (is_file($file_view)) {
             require $file_view;
         } else {
-            echo "<p>Не найден вид <b>{$file_view}</b></p>";
+            throw new \Exception("<p>Не найден вид <b>{$file_view}</b></p>", 404);
         }
         $content = ob_get_clean();
 
@@ -69,7 +69,7 @@ class View
                 }
                 require $file_layout;
             } else {
-                echo "<p>Не найден шаблон <b>{$file_layout}</b></p>";
+                throw new \Exception("<p>Не найден шаблон <b>{$file_layout}</b></p>", 404);
             }
         }
     }

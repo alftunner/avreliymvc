@@ -31,6 +31,9 @@ Router::add('^page/(?P<action>[a-z-]+)/(?P<alias>[a-z-]+)$', ['controller' => 'P
 Router::add('^page/(?P<alias>[a-z-]+)$', ['controller' => 'Page', 'action' => 'view']);
 
 //Дефолтные правила маршрутизации
+Router::add('^manager$', ['controller' => 'User', 'action' => 'index', 'prefix' => 'manager']);
+Router::add('^manager/?(?P<controller>[a-z-]+)/?(?P<action>[a-z-]+)?$', ['prefix' => 'manager']);
+
 Router::add('^$', ['controller' => 'Main', 'action' => 'index']);
 Router::add('^(?P<controller>[a-z-]+)/?(?P<action>[a-z-]+)?$'); // создаёт именованные ключи для совпадений с регулярками
 

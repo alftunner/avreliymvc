@@ -61,6 +61,13 @@ class Router
                 if(!isset($route['action'])) {
                     $route['action'] = 'index';
                 }
+                //Префикс для админских контроллеров
+                if (!isset($route['prefix'])) {
+                    $route['prefix'] = '';
+                } else {
+                    $route['prefix'] .= '\\';
+                }
+
                 $route['controller'] = self::upperCamelCase($route['controller']);
                 self::$currentRoute = $route;
                 return true;
@@ -77,7 +84,7 @@ class Router
     public static function dispatch($url) {
         $url = self::removeQueryString($url);
         if (self::matchRoute($url)) {
-            $controller = 'app\\controllers\\' . self::$currentRoute['controller'].'Controller';
+            $controller = 'app\\controllers\\' . self::$currentRoute['prefix'] . self::$currentRoute['controller'].'Controller';
             if(class_exists($controller)) {
                 $controllerObj = new $controller(self::$currentRoute);
                 $action = self::lowerCamelCase(self::$currentRoute['action']) . 'Action';
